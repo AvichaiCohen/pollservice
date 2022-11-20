@@ -29,16 +29,15 @@ public class PollServiceController {
     }
 
     @PostMapping(value = "/create")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public PollQuestions createAnswersById(@RequestBody PollQuestions pollQuestions) throws Exception {
-       try{
-           internalCustomerService.getInternalCustomerById(pollQuestions.getCustomerId());
-           }
-       catch (Exception exception){
-           throw new Exception("no customer with this id is found");
-       }
+    public void createAnswersById(@RequestBody PollQuestions pollQuestions) throws Exception {
+        System.out.println("im here in create");
+        InternalCustomer existingCustomer=internalCustomerService.getInternalCustomerById(pollQuestions.getCustomerId());
+        if (existingCustomer == null) {
+            System.out.println("im here in if");
+            throw new Exception("no customer with this id is found");
+        }
+        System.out.println("im here after if");
         pollServiceRepository.createPollAnswersById(pollQuestions.getCustomerId(),pollQuestions);
-       return pollQuestions;
     }
 
     @PutMapping(value = "/{customerId}/update")

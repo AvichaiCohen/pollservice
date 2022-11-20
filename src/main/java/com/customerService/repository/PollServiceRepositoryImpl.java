@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class PollServiceRepositoryImpl implements PollServiceRepository {
 
-    private static final String POLL_SERVICE_TABLE_NAME = "customer_order";
+    private static final String POLL_SERVICE_TABLE_NAME = "poll_service";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -25,22 +25,22 @@ public class PollServiceRepositoryImpl implements PollServiceRepository {
 
     @Override
     public void updatePollAnswersById(PollQuestions pollQuestions) throws Exception {
-        String sql = "UPDATE " + POLL_SERVICE_TABLE_NAME + " SET customer_id=?, first_question=?, second_question=?, third_question=?, fourth_question=?" +
-                "WHERE id=?";
+        String sql = "UPDATE " + POLL_SERVICE_TABLE_NAME + " SET first_question=?, second_question=?, third_question=?, fourth_question=?" +
+                "WHERE customer_id=?";
         jdbcTemplate.update(sql, pollQuestions.getFirstQuestion(), pollQuestions.getSecondQuestion(), pollQuestions.getThirdQuestion(),pollQuestions.getFourthQuestion(), pollQuestions.getCustomerId());
     }
 
     @Override
-    public void deletePollAnswersById(Long id) throws Exception {
-        String sql = "DELETE FROM " + POLL_SERVICE_TABLE_NAME + " WHERE id=?";
-        jdbcTemplate.update(sql, id);
+    public void deletePollAnswersById(Long customer_id) throws Exception {
+        String sql = "DELETE FROM " + POLL_SERVICE_TABLE_NAME + " WHERE customer_id=?";
+        jdbcTemplate.update(sql, customer_id);
     }
 
     @Override
-    public PollQuestions getPollAnswersById(Long id) {
-        String sql = "SELECT * FROM " + POLL_SERVICE_TABLE_NAME + " WHERE id=?";
+    public PollQuestions getPollAnswersById(Long customer_id) {
+        String sql = "SELECT * FROM " + POLL_SERVICE_TABLE_NAME + " WHERE customer_id=?";
         try {
-            return jdbcTemplate.queryForObject(sql, new PollServiceMapper(), id);
+            return jdbcTemplate.queryForObject(sql, new PollServiceMapper(), customer_id);
         } catch (EmptyResultDataAccessException error){
             return null;
         }
