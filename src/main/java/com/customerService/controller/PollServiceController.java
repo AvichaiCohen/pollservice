@@ -16,44 +16,57 @@ public class PollServiceController {
 
     @Autowired
     private PollService pollService;
-    @Autowired
-    PollServiceRepository pollServiceRepository;
 
     @Autowired
     private InternalCustomerService internalCustomerService;
 
 
-    @GetMapping (value = "/questions")
-    public String  getQA(){
+    @GetMapping(value = "/questions")
+    public String getQA() {
         return "new poll";
+    }
+    @GetMapping(value = "/check/{customerId}")
+    public InternalCustomer checkUser(@PathVariable Long customerId) throws Exception{
+        InternalCustomer existingCustomer = internalCustomerService.getInternalCustomerById(customerId);
+        if (existingCustomer == null) {
+            throw new Error("no such customer exist");
+        }else {
+            return existingCustomer;
+        }
     }
 
     @PostMapping(value = "/create")
-    public void createAnswersById(@RequestBody PollQuestions pollQuestions) throws Exception {
-        System.out.println("im here in create");
-        InternalCustomer existingCustomer=internalCustomerService.getInternalCustomerById(pollQuestions.getCustomerId());
+    public String createAnswersById(@RequestBody PollQuestions pollQuestions) throws Exception {
+        InternalCustomer existingCustomer = internalCustomerService.getInternalCustomerById(pollQuestions.getCustomerId());
         if (existingCustomer == null) {
-            System.out.println("im here in if");
             throw new Exception("no customer with this id is found");
         }
-        System.out.println("im here after if");
-        pollServiceRepository.createPollAnswersById(pollQuestions.getCustomerId(),pollQuestions);
+        else {
+            pollService.createAnswersById(pollQuestions.getCustomerId(), pollQuestions);
+            return "Created a submission to the Poll Service";
+        }
     }
 
-    @PutMapping(value = "/{customerId}/update")
-    public void updateAnswersById(@PathVariable Long customerId,
-                                   @RequestBody PollQuestions pollQuestions) throws Exception {
-        pollService.updateAnswersById(customerId, pollQuestions);
+    @PutMapping(value = "/update")
+    public String updateAnswersById(@RequestBody PollQuestions pollQuestions) throws Exception {
+        InternalCustomer existingCustomer = internalCustomerService.getInternalCustomerById(pollQuestions.getCustomerId());
+        if (existingCustomer == null) {
+            throw new Exception("no customer with this id is found");
+        } else {
+            pollService.updateAnswersById(pollQuestions.getCustomerId(), pollQuestions);
+            return "Answers Updated";
+        }
     }
 
-    @DeleteMapping(value = "/{customerId}/delete")
-    public void deleteAnswersById(@PathVariable Long customerId) throws Exception {
-        pollService.deleteAnswersById(customerId);
-    }
-
-    @GetMapping(value = "/{customerId}")
-    public InternalCustomer getInternalCustomerById(@PathVariable Long customerId) {
-        return internalCustomerService.getInternalCustomerById(customerId);
+    @DeleteMapping(value = "/delete/{customerId}")
+    public String deleteAnswersById(@PathVariable Long customerId){
+        InternalCustomer existingCustomer = internalCustomerService.getInternalCustomerById(customerId);
+        if (existingCustomer == null) {
+            return "no user found";
+        } else {
+            pollService.deleteAnswersById(customerId);
+            return "Deleted Answers of " + existingCustomer.getFirstName() + " " + existingCustomer.getLastName();
+        }
     }
 }
 

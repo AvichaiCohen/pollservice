@@ -31,7 +31,7 @@ public class PollServiceRepositoryImpl implements PollServiceRepository {
     }
 
     @Override
-    public void deletePollAnswersById(Long customer_id) throws Exception {
+    public void deletePollAnswersById(Long customer_id) {
         String sql = "DELETE FROM " + POLL_SERVICE_TABLE_NAME + " WHERE customer_id=?";
         jdbcTemplate.update(sql, customer_id);
     }

@@ -7,6 +7,6 @@ import java.util.List;
 public interface PollServiceRepository {
     void createPollAnswersById(Long customerId,PollQuestions pollQuestions) throws Exception;
     void updatePollAnswersById(PollQuestions pollQuestions) throws Exception;
-    void deletePollAnswersById(Long customerId) throws Exception;
+    void deletePollAnswersById(Long customerId);
     PollQuestions getPollAnswersById(Long customerId);
 }

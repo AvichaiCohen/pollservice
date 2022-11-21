@@ -13,15 +13,7 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public void createAnswersById(Long id, PollQuestions pollQuestions) throws Exception{
-        try {
-
-        }
-            catch
-         (Exception e) {
-        throw new Exception(e);
-        }
         pollServiceRepository.createPollAnswersById(pollQuestions.getCustomerId(),pollQuestions);
-
     }
 
     @Override
@@ -30,9 +22,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public void deleteAnswersById(Long id) throws Exception {
+    public void deleteAnswersById(Long id){
         pollServiceRepository.deletePollAnswersById(id);
-
     }
 
     @Override
